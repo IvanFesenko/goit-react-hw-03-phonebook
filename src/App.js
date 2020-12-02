@@ -9,19 +9,10 @@ import ContactList from './components/ContactList/ContactList';
 import Filter from './components/Filter/Filter';
 
 class App extends Component {
-  static defaultProps = {
+  state = {
     contacts: [],
     filter: '',
   };
-
-  constructor(props) {
-    super(props);
-    this.state = { ...this.props };
-    this.addContact = this.addContact.bind(this);
-    this.filteredList = this.filteredList.bind(this);
-    this.onChangeFilter = this.onChangeFilter.bind(this);
-    this.onDeleteHandler = this.onDeleteHandler.bind(this);
-  }
 
   componentDidMount() {
     const DBContacts = localStorage.getItem('contacts');
@@ -37,7 +28,7 @@ class App extends Component {
     }
   }
 
-  nameAvailable(newName) {
+  isUniqueContact(newName) {
     const { contacts } = this.state;
     const index = contacts.findIndex(
       ({ name }) => name.toLowerCase() === newName.toLowerCase().trim(),
@@ -45,7 +36,7 @@ class App extends Component {
     return index === -1 ? true : false;
   }
 
-  addContact(name, number) {
+  addContact = (name, number) => {
     if (!name.trim()) {
       alert(`Wrong name`);
       return;
@@ -54,7 +45,7 @@ class App extends Component {
       alert(`Wrong number`);
       return;
     }
-    if (this.nameAvailable(name)) {
+    if (this.isUniqueContact(name)) {
       const { contacts } = this.state;
       const newContact = { id: uid(), name, number };
       this.setState({
@@ -67,27 +58,27 @@ class App extends Component {
     } else {
       alert(`${name} is already in contacts`);
     }
-  }
+  };
 
-  onChangeFilter(value) {
+  onChangeFilter = value => {
     this.setState({
       filter: value,
     });
-  }
+  };
 
-  onDeleteHandler(id) {
+  onDeleteHandler = id => {
     const { contacts } = this.state;
     this.setState({
-      contacts: contacts.filter(i => i.id !== id),
+      contacts: contacts.filter(contact => contact.id !== id),
     });
-  }
+  };
 
-  filteredList() {
+  filteredList = () => {
     const { contacts, filter } = this.state;
     return contacts.filter(({ name }) =>
       name.toLowerCase().includes(filter.toLowerCase()),
     );
-  }
+  };
 
   render() {
     const { filter, contacts } = this.state;

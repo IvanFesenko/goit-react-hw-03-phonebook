@@ -3,27 +3,27 @@ import React, { Component } from 'react';
 import s from './ContactForm.module.css';
 
 class ContactForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      name: '',
-      number: '',
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+  state = {
+    name: '',
+    number: '',
+  };
 
-  handleChange(event, type) {
+  handleChange = event => {
+    const {
+      value,
+      dataset: { type },
+    } = event.target;
+
     this.setState({
-      [type]: event.target.value,
+      [type]: value,
     });
-  }
+  };
 
-  handleSubmit(event) {
+  handleSubmit = event => {
     event.preventDefault();
     const { name, number } = this.state;
     this.props.onAddContact(name, number);
-  }
+  };
 
   render() {
     return (
@@ -38,7 +38,8 @@ class ContactForm extends Component {
             name="name"
             placeholder="Name"
             value={this.state.name}
-            onChange={event => this.handleChange(event, 'name')}
+            data-type="name"
+            onChange={event => this.handleChange(event)}
           />
         </label>
         <label htmlFor="formNumber">
@@ -51,7 +52,8 @@ class ContactForm extends Component {
             placeholder="Number"
             value={this.state.number}
             required
-            onChange={event => this.handleChange(event, 'number')}
+            data-type="number"
+            onChange={event => this.handleChange(event)}
           />
         </label>
         <button type="submit" className={s.btn}>
